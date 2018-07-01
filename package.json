@@ -1,0 +1,28 @@
+{
+    "name": "core-theme",
+    "displayName": "Core Theme",
+    "description": "Minimal palette for maximum focus.",
+    "keywords": [
+        "vscode",
+        "theme"
+    ],
+    "version": "0.0.0",
+    "author": "Michael Huynh <miqid@outlook.com>",
+    "publisher": "miqh",
+    "license": "Apache-2.0",
+    "engines": {
+        "vscode": "^1.12.0"
+    },
+    "categories": [
+        "Themes"
+    ],
+    "contributes": {
+        "themes": [
+            {
+                "label": "Core (Dark)",
+                "uiTheme": "vs-dark",
+                "path": "./themes/dark.json"
+            }
+        ]
+    }
+}
