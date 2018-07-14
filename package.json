@@ -17,12 +17,39 @@
         "Themes"
     ],
     "contributes": {
+        "commands": [
+            {
+                "command": "core-theme.generateThemes",
+                "title": "Generate Themes",
+                "category": "Core Theme"
+            }
+        ],
         "themes": [
             {
                 "label": "Core (Dark)",
                 "uiTheme": "vs-dark",
-                "path": "./themes/dark.json"
+                "path": "./themes/core-dark.json"
+            },
+            {
+                "label": "Core (Light)",
+                "uiTheme": "vs",
+                "path": "./themes/core-light.json"
             }
         ]
+    },
+    "activationEvents": [
+        "onCommand:core-theme.generateThemes"
+    ],
+    "main": "./dist/extension",
+    "scripts": {
+        "build": "./node_modules/.bin/tsc -p .",
+        "check": "./node_modules/.bin/tslint -p .",
+        "watch": "./node_modules/.bin/tsc -watch -p ."
+    },
+    "devDependencies": {
+        "@types/node": "^10.5.2",
+        "tslint": "^5.10.0",
+        "typescript": "^2.9.2",
+        "vscode": "^1.1.18"
     }
 }
