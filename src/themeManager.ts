@@ -1,43 +1,172 @@
 import fs from 'fs';
 import path from 'path';
 import { extensions } from 'vscode';
-import { Rgba, mix, fadeOut } from './color';
+import { Rgba, mix, fadeOut, brightness } from './color';
 import { extensionId } from './constants';
 
-const extensionPath = extensions.getExtension(extensionId)!.extensionPath;
+const extension = extensions.getExtension(extensionId)!;
 
-const readDir = promisify(fs.readdir);
-const readFile = promisify(fs.readFile);
+const extensionPath = extension.extensionPath;
+const packageJsonPath = path.resolve(extensionPath, 'package.json');
+const templatesPath = path.resolve(extensionPath, 'templates');
+const themesPath = path.resolve(extensionPath, 'themes');
+
+const readDir = promisify<string[]>(fs.readdir);
+const readFile = (filePath: string) => promisify<string>(fs.readFile)(filePath, 'utf8');
+const removeFile = promisify(fs.unlink);
+const writeDir = promisify(fs.mkdir);
 const writeFile = promisify(fs.writeFile);
 
-interface ThemeOptions {
+interface Metadata {
+    filePath: string;
+}
+
+/**
+ * Represents the contents of a theme generated from a template.
+ */
+export interface Theme {
     name: string;
-    filename: string;
-    backgroundColor: string;
-    foregroundColor: string;
+    type: ThemeType;
+    metadata: Metadata;
+}
+
+/**
+ * Represents the contents of a theme template.
+ */
+export interface ThemeTemplate {
+    name: string;
+    backgroundColor: Rgba;
+    foregroundColor: Rgba;
+    metadata: Metadata;
+}
+
+/**
+ * Represents the possible values of the VS Code theme metadata property named `type`.
+ */
+export type ThemeType = 'light' | 'dark' | 'hc';
+
+/**
+ * Creates a new theme template file with the given name.
+ *
+ * @param name Theme name.
+ * @return Created template file path.
+ */
+export async function createTemplate(name: string): Promise<string> {
+    const fileName = name
+        .toLowerCase()
+        .replace(/\W+/g, '-')
+        .replace(/-$/, '') + '.json';
+    const filePath = path.resolve(templatesPath, fileName);
+    const template: ThemeTemplate = {
+        name: name,
+        backgroundColor: Rgba.parse('#000000'),
+        foregroundColor: Rgba.parse('#ffffff'),
+        metadata: { filePath },
+    };
+    await writeJsonFile(filePath, template);
+    return filePath;
 }
 
 /**
  * Generates VS Code theme files based on the settings of templates.
  */
 export async function generateFromTemplates() {
-    const templatesPath = path.resolve(extensionPath, 'templates');
-    const files = await readDir(templatesPath);
-    await Promise.all(files.map((file: string) => {
-        const filePath = path.resolve(templatesPath, file);
-        return readFile(filePath, 'utf8')
-            .then(data => {
-                let theme: ThemeOptions = JSON.parse(data);
-                theme.filename = file;
-                return theme;
-            })
-            .then(theme => generate(theme));
-    }));
+    await clearThemes();
+    let themes: Theme[] = [];
+    for await (const theme of readTemplates()) {
+        const generatedTheme = await generateTheme(theme);
+        themes.push(generatedTheme);
+    }
+    await updateManifest(themes);
 }
 
-async function generate(options: ThemeOptions) {
-    const bg = Rgba.parse(options.backgroundColor);
-    const fg = Rgba.parse(options.foregroundColor);
+/**
+ * Indicates there are changes requiring themes to be regenerated.
+ *
+ * @return Whether themes should be regenerated.
+ */
+export async function hasPendingChanges(): Promise<boolean> {
+    let themesPathFiles: string[] = [];
+    try {
+        themesPathFiles = await readDir(themesPath);
+    } catch (e) {
+        if (e.code !== 'ENOENT') {
+            throw e;
+        }
+    }
+    const templatesPathFiles = await readDir(templatesPath);
+    const isJsonFile = (f: string) => f.endsWith('.json');
+    const themeFiles = themesPathFiles.filter(isJsonFile);
+    const templateFiles = templatesPathFiles.filter(isJsonFile);
+    if (themeFiles.length !== templateFiles.length) {
+        return true;
+    }
+    themeFiles.sort();
+    templateFiles.sort();
+    return themeFiles.some((f, i) => f !== templateFiles[i]);
+}
+
+/**
+ * Gets all available theme templates.
+ *
+ * @return Iterator across theme templates.
+ */
+export async function* readTemplates(): AsyncIterableIterator<ThemeTemplate> {
+    const files = await readDir(templatesPath);
+    for (const file of files) {
+        const filePath = path.resolve(templatesPath, file);
+        const fileData = await readFile(filePath);
+        let template = JSON.parse(fileData);
+        yield {
+            name: template.name,
+            backgroundColor: Rgba.parse(template.backgroundColor),
+            foregroundColor: Rgba.parse(template.foregroundColor),
+            metadata: { filePath },
+        };
+    }
+}
+
+/**
+ * Removes the given theme template.
+ *
+ * @param template Theme template to remove.
+ */
+export async function removeTemplate(template: ThemeTemplate) {
+    await removeFile(template.metadata.filePath);
+}
+
+/**
+ * Deletes all theme files (i.e. with `.json` extension).
+ */
+async function clearThemes() {
+    let files: string[];
+    try {
+        files = await readDir(themesPath);
+    } catch (e) {
+        // Themes directory will not exist until themes have been generated before
+        if (e.code !== 'ENOENT') {
+            throw e;
+        }
+        return;
+    }
+    for (const file of files) {
+        if (!file.endsWith('.json')) {
+            continue;
+        }
+        const filepath = path.resolve(themesPath, file);
+        await removeFile(filepath);
+    }
+}
+
+/**
+ * Generates a VS Code theme file from a given template.
+ *
+ * @param template Theme template.
+ * @return Generated theme details.
+ */
+async function generateTheme(template: ThemeTemplate): Promise<Theme> {
+    const bg = template.backgroundColor;
+    const fg = template.foregroundColor;
     const b1 = bg.toHex();
     const b2 = mix(fg, bg, .07).toHex();
     const f1 = fg.toHex();
@@ -51,8 +180,9 @@ async function generate(options: ThemeOptions) {
     const s5 = fadeOut(fg, .96).toHex();
     const none = '#0000';
     const theme = {
-        name: options.name,
-        colors: {
+        'name': template.name,
+        'type': (brightness(bg) > brightness(fg) ? 'light' : 'dark') as ThemeType,
+        'colors': {
             'activityBar.background': b1,
             'activityBar.border': none,
             'activityBar.dropBackground': s4,
@@ -348,9 +478,58 @@ async function generate(options: ThemeOptions) {
             },
         ],
     };
-    const outPath = path.resolve(extensionPath, 'themes', options.filename);
-    const outData = JSON.stringify(theme, null, 4);
-    await writeFile(outPath, outData);
+    try {
+        await writeDir(themesPath);
+    } catch (e) {
+        if (e.code !== 'EEXIST') {
+            throw e;
+        }
+    }
+    const themeFilename = path.basename(template.metadata.filePath);
+    const outPath = path.resolve(themesPath, themeFilename);
+    await writeJsonFile(outPath, theme);
+    return {
+        name: `Core (${theme.name})`,
+        type: theme.type,
+        metadata: { filePath: outPath },
+    };
+}
+
+/**
+ * Rewrites the `package.json` file to include the specified themes.
+ *
+ * Necessary because VS Code does not pick up themes from theme file existence alone.
+ *
+ * @param themes Themes to be contributed.
+ */
+async function updateManifest(themes: Theme[]) {
+    let themeContributions = themes.map(theme => ({
+        label: theme.name,
+        uiTheme: theme.type === 'dark' ? 'vs-dark' : 'vs',
+        path: path.relative(extensionPath, theme.metadata.filePath),
+    }));
+    // Sort by theme name to assist visual grepping
+    themeContributions.sort((a: any, b: any) => a.label.localeCompare(b));
+    // Do not use the parsed copy of package.json from the extensions
+    // namespace as it contains extra properties which should not be written
+    const packageJsonData = await readFile(packageJsonPath);
+    let packageJson = JSON.parse(packageJsonData);
+    packageJson.contributes.themes = themeContributions;
+    await writeJsonFile(packageJsonPath, packageJson);
+}
+
+/**
+ * Writes JSON-like data to a file.
+ *
+ * Ensures the output file ends with a newline and strips any metadata properties.
+ *
+ * @param filePath Target file.
+ * @param data JSON-like data to write.
+ */
+async function writeJsonFile(filePath: string, data: object) {
+    const filter = (key: string, value: any) => key !== 'metadata' ? value : undefined;
+    const fileData = JSON.stringify(data, filter, 4) + '\n';
+    await writeFile(filePath, fileData);
 }
 
 /**
@@ -361,10 +540,10 @@ async function generate(options: ThemeOptions) {
  * @todo Should use `util.promisify()`, but VS Code does not come with Node v8
  *       at the time of writing this.
  */
-function promisify(fn: Function) {
-    return function (...args: any[]): Promise<any> {
+function promisify<T = void>(fn: Function) {
+    return function (...args: any[]): Promise<T> {
         return new Promise((resolve, reject) => {
-            fn.apply(null, args.concat((err: any, res: any) => {
+            fn.apply(null, args.concat((err: any, res: T) => {
                 if (err) {
                     reject(err);
                 } else {

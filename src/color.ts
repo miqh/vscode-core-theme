@@ -66,6 +66,14 @@ export class Rgba {
         return this.a === 1 ? c : c + this.padByte(Math.round(this.a * 255));
     }
 
+    /**
+     * Overrides `JSON.stringify()` serialisation behaviour.
+     * @return Hex colour value.
+     */
+    toJSON(): string {
+        return this.toHex();
+    }
+
     private padByte(n: number): string {
         return (0xf0 & n ? '' : '0') + n.toString(16);
     }
@@ -107,4 +115,20 @@ export function fadeOut(color: Rgba, amount: number): Rgba {
     let copy = Rgba.copy(color);
     copy.a -= amount;
     return copy;
+}
+
+/**
+ * Returns the perceived brightness of a colour disregarding opacity.
+ *
+ * Perceived brightness formula source:
+ * http://alienryderflex.com/hsp.html
+ *
+ * @param color Colour to get brightness of.
+ * @return Brightness value.
+ */
+export function brightness(color: Rgba): number {
+    return Math.sqrt(
+        .299 * color.r * color.r +
+        .587 * color.g * color.g +
+        .114 * color.b * color.b);
 }

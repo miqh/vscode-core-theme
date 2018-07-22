@@ -19,26 +19,34 @@
     "contributes": {
         "commands": [
             {
-                "command": "core-theme.generateThemes",
+                "command": "core-theme.create",
+                "title": "Create Template",
+                "category": "Core Theme"
+            },
+            {
+                "command": "core-theme.edit",
+                "title": "Edit Template",
+                "category": "Core Theme"
+            },
+            {
+                "command": "core-theme.generate",
                 "title": "Generate Themes",
+                "category": "Core Theme"
+            },
+            {
+                "command": "core-theme.remove",
+                "title": "Remove Template",
                 "category": "Core Theme"
             }
         ],
-        "themes": [
-            {
-                "label": "Core (Dark)",
-                "uiTheme": "vs-dark",
-                "path": "./themes/core-dark.json"
-            },
-            {
-                "label": "Core (Light)",
-                "uiTheme": "vs",
-                "path": "./themes/core-light.json"
-            }
-        ]
+        "themes": []
     },
     "activationEvents": [
-        "onCommand:core-theme.generateThemes"
+        "onCommand:core-theme.create",
+        "onCommand:core-theme.edit",
+        "onCommand:core-theme.generate",
+        "onCommand:core-theme.remove",
+        "onLanguage:json"
     ],
     "main": "./dist/extension",
     "scripts": {
