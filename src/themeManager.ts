@@ -35,6 +35,7 @@ export interface Theme {
  */
 export interface ThemeTemplate {
     name: string;
+    default?: boolean;
     backgroundColor: Rgba;
     foregroundColor: Rgba;
     metadata: Metadata;
@@ -63,7 +64,14 @@ export async function createTemplate(name: string): Promise<string> {
         foregroundColor: Rgba.parse('#ffffff'),
         metadata: { filePath },
     };
-    await writeJsonFile(filePath, template);
+    try {
+        await writeJsonFile(filePath, template, { flag: 'wx' });
+    } catch (e) {
+        if (e.code === 'EEXIST') {
+            throw 'Template with a similar name already exists.';
+        }
+        throw e;
+    }
     return filePath;
 }
 
@@ -119,6 +127,7 @@ export async function* readTemplates(): AsyncIterableIterator<ThemeTemplate> {
         let template = JSON.parse(fileData);
         yield {
             name: template.name,
+            default: template.default,
             backgroundColor: Rgba.parse(template.backgroundColor),
             foregroundColor: Rgba.parse(template.foregroundColor),
             metadata: { filePath },
@@ -525,11 +534,12 @@ async function updateManifest(themes: Theme[]) {
  *
  * @param filePath Target file.
  * @param data JSON-like data to write.
+ * @param options Write options.
  */
-async function writeJsonFile(filePath: string, data: object) {
+async function writeJsonFile(filePath: string, data: object, options: any = undefined) {
     const filter = (key: string, value: any) => key !== 'metadata' ? value : undefined;
     const fileData = JSON.stringify(data, filter, 4) + '\n';
-    await writeFile(filePath, fileData);
+    await writeFile(filePath, fileData, options);
 }
 
 /**

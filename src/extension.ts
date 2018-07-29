@@ -50,7 +50,16 @@ async function create() {
     if (!themeName) {
         return;
     }
-    const templateFilePath = await themeManager.createTemplate(themeName);
+    let templateFilePath: string;
+    try {
+        templateFilePath = await themeManager.createTemplate(themeName);
+    } catch (e) {
+        if (typeof e === 'string') {
+            await window.showErrorMessage(e);
+            return;
+        }
+        throw e;
+    }
     const document = await workspace.openTextDocument(templateFilePath);
     await window.showTextDocument(document);
 }
@@ -73,10 +82,18 @@ async function generate() {
 async function getSelectedTemplate(): Promise<ThemeTemplate | undefined> {
     let templates: ThemeTemplate[] = [];
     for await (const template of themeManager.readTemplates()) {
+        // Theme management commands should only apply to custom templates
+        if (template.default != null) {
+            continue;
+        }
         templates.push({
             label: template.name,
             data: template,
         });
+    }
+    if (templates.length === 0) {
+        await window.showInformationMessage('No custom theme templates exist.');
+        return;
     }
     return await window.showQuickPick(templates);
 }

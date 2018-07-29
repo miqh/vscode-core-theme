@@ -1,5 +1,6 @@
 {
     "name": "Dark",
+    "default": true,
     "backgroundColor": "#1f1f1f",
     "foregroundColor": "#c0c0c0"
 }
