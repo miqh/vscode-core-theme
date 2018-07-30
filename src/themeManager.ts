@@ -1,12 +1,13 @@
 import fs from 'fs';
 import path from 'path';
-import { extensions } from 'vscode';
+import './polyfills';
 import { Rgba, mix, fadeOut, brightness } from './color';
-import { extensionId } from './constants';
 
-const extension = extensions.getExtension(extensionId)!;
+// Obtain the extension path by relative resolution rather than accessing the
+// VS Code API to avoid a dependency on the latter so that exposed functions
+// can be invoked from other scripts
+const extensionPath = path.resolve(__dirname, '..');
 
-const extensionPath = extension.extensionPath;
 const packageJsonPath = path.resolve(extensionPath, 'package.json');
 const templatesPath = path.resolve(extensionPath, 'templates');
 const themesPath = path.resolve(extensionPath, 'themes');
