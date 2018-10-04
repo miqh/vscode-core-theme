@@ -3,6 +3,8 @@
 A configurable [Visual Studio Code][vscode] theme with minimal environment
 aesthetics for maximum focus.
 
+[![vsmarketplace](https://vsmarketplacebadge.apphb.com/version-short/miqh.core-theme.svg)][vsmarketplace]
+
 ## Overview
 
 This extension provides you with two default themes which change colours used
@@ -82,3 +84,4 @@ syntax highlighting. [Here is documentation for these settings.][color-ref]
 
 [color-ref]: https://code.visualstudio.com/docs/getstarted/theme-color-reference
 [vscode]: https://code.visualstudio.com/
+[vsmarketplace]: https://marketplace.visualstudio.com/items?itemName=miqh.core-theme
