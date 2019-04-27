@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning][].
 
+## [0.3.0][] - 2019-04-27
+
+### Adds
+- Theme generation parameters to cover the list filter widget and suppress
+  styling of more items inside comments.
+
+### Fixes
+- Critical issue with the extension failing to activate which made theme
+  generation unavailable.
+
 ## [0.2.0][] - 2018-10-04
 
 ### Adds
@@ -19,4 +29,5 @@ First extension release.
 
 [Semantic Versioning]: http://semver.org/
 
-[0.2.0]: https://github.com/miqid/atom-language-rust/compare/0.1.0...0.2.0
+[0.3.0]: https://github.com/miqh/vscode-core-theme/compare/0.2.0...0.3.0
+[0.2.0]: https://github.com/miqh/vscode-core-theme/compare/0.1.0...0.2.0
