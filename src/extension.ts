@@ -89,6 +89,7 @@ async function getSelectedTemplate(): Promise<ThemeTemplate | undefined> {
         templates.push({
             label: template.name,
             data: template,
+            description: '',
         });
     }
     if (templates.length === 0) {
