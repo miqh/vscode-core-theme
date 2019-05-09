@@ -18,9 +18,33 @@ const removeFile = promisify(fs.unlink);
 const writeDir = promisify(fs.mkdir);
 const writeFile = promisify(fs.writeFile);
 
+/**
+ * Theme version tracks extension version.
+ *
+ * Version should not change while extension is activated.
+ */
+const getThemeVersion = Object.assign(
+    async () => {
+        const { cachedVersion } = getThemeVersion;
+        if (cachedVersion) {
+            return Promise.resolve(cachedVersion);
+        }
+        const packageJsonData = await readFile(packageJsonPath);
+        let { version } = JSON.parse(packageJsonData);
+        getThemeVersion.cachedVersion = (version as string);
+        return getThemeVersion.cachedVersion;
+    },
+    { cachedVersion: undefined } as { cachedVersion?: string },
+);
+
 interface Metadata {
     filePath: string;
 }
+
+/**
+ * Will not exist on generated themes prior to 0.4.0.
+ */
+export const themeVersionKey = '__version';
 
 /**
  * Represents the contents of a theme generated from a template.
@@ -90,32 +114,6 @@ export async function generateFromTemplates() {
 }
 
 /**
- * Indicates there are changes requiring themes to be regenerated.
- *
- * @return Whether themes should be regenerated.
- */
-export async function hasPendingChanges(): Promise<boolean> {
-    let themesPathFiles: string[] = [];
-    try {
-        themesPathFiles = await readDir(themesPath);
-    } catch (e) {
-        if (e.code !== 'ENOENT') {
-            throw e;
-        }
-    }
-    const templatesPathFiles = await readDir(templatesPath);
-    const isJsonFile = (f: string) => f.endsWith('.json');
-    const themeFiles = themesPathFiles.filter(isJsonFile);
-    const templateFiles = templatesPathFiles.filter(isJsonFile);
-    if (themeFiles.length !== templateFiles.length) {
-        return true;
-    }
-    themeFiles.sort();
-    templateFiles.sort();
-    return themeFiles.some((f, i) => f !== templateFiles[i]);
-}
-
-/**
  * Gets all available theme templates.
  *
  * @return Iterator across theme templates.
@@ -143,6 +141,32 @@ export async function* readTemplates(): AsyncIterableIterator<ThemeTemplate> {
  */
 export async function removeTemplate(template: ThemeTemplate) {
     await removeFile(template.metadata.filePath);
+}
+
+/**
+ * Checks whether themes require generation.
+ */
+export async function checkThemes() {
+    let files: string[];
+    try {
+        files = await readDir(themesPath);
+    } catch (e) {
+        if (e.code !== 'ENOENT') {
+            throw e;
+        }
+        // Case of fresh install
+        throw 'No themes detected.';
+    }
+    const themeVersion = await getThemeVersion();
+    for (const file of files) {
+        const filePath = path.resolve(themesPath, file);
+        const fileData = await readFile(filePath);
+        let theme = JSON.parse(fileData);
+        if (theme[themeVersionKey] !== themeVersion) {
+            // Case of upgrade
+            throw 'Detected an outdated theme version.';
+        }
+    }
 }
 
 /**
@@ -175,6 +199,7 @@ async function clearThemes() {
  * @return Generated theme details.
  */
 async function generateTheme(template: ThemeTemplate): Promise<Theme> {
+    const themeVersion = await getThemeVersion();
     const bg = template.backgroundColor;
     const fg = template.foregroundColor;
     const b1 = bg.toHex();
@@ -190,6 +215,7 @@ async function generateTheme(template: ThemeTemplate): Promise<Theme> {
     const s5 = fadeOut(fg, .96).toHex();
     const none = '#0000';
     const theme = {
+        [themeVersionKey]: themeVersion,
         'name': template.name,
         'type': (brightness(bg) > brightness(fg) ? 'light' : 'dark') as ThemeType,
         'colors': {

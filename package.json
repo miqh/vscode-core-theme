@@ -52,11 +52,7 @@
         "themes": []
     },
     "activationEvents": [
-        "onCommand:core-theme.create",
-        "onCommand:core-theme.edit",
-        "onCommand:core-theme.generate",
-        "onCommand:core-theme.remove",
-        "onLanguage:json"
+        "*"
     ],
     "main": "./dist/extension",
     "icon": "images/extension-icon.png",
@@ -66,7 +62,7 @@
         "check": "./node_modules/.bin/tslint -p .",
         "watch": "./node_modules/.bin/tsc -watch -p .",
         "postinstall": "node ./node_modules/vscode/bin/install",
-        "vscode:prepublish": "npm run check && npm run build && node ./dist/prepublish"
+        "vscode:prepublish": "npm run check && npm run build"
     },
     "devDependencies": {
         "@types/node": "^10.14.6",

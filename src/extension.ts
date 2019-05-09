@@ -25,6 +25,7 @@ export async function activate(context: ExtensionContext) {
         commands.registerCommand(`${extensionName}.remove`, remove),
         workspace.onDidSaveTextDocument(checkTemplates),
     );
+    await checkThemes();
 }
 
 async function checkTemplates(savedFile: TextDocument) {
@@ -41,6 +42,23 @@ async function checkTemplates(savedFile: TextDocument) {
         return;
     }
     await generate();
+}
+
+async function checkThemes() {
+    try {
+        await themeManager.checkThemes();
+    } catch (e) {
+        if (typeof e === 'string') {
+            const selection = await window.showWarningMessage(
+                e,
+                { title: 'Generate Themes' },
+                { title: 'Dismiss' });
+            if (selection == null || selection.title === 'Dismiss') {
+                return;
+            }
+            await generate();
+        }
+    }
 }
 
 async function create() {
