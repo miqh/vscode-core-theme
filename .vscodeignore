@@ -3,3 +3,4 @@ tsconfig.json
 tslint.json
 .vscode/**
 src/**
+themes/**
