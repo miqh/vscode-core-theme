@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning][].
 
+## [0.5.0][] - 2019-11-17
+
+### Adds
+- Theme generation parameters to cover stylable icons and minimap highlighting.
+
 ## [0.4.1][] - 2019-05-09
 
 ### Changes
@@ -37,6 +42,7 @@ First extension release.
 
 [Semantic Versioning]: http://semver.org/
 
+[0.5.0]: https://github.com/miqh/vscode-core-theme/compare/0.4.1...0.5.0
 [0.4.0]: https://github.com/miqh/vscode-core-theme/compare/0.3.0...0.4.1
 [0.3.0]: https://github.com/miqh/vscode-core-theme/compare/0.2.0...0.3.0
 [0.2.0]: https://github.com/miqh/vscode-core-theme/compare/0.1.0...0.2.0
