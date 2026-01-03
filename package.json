@@ -1,73 +1,154 @@
 {
-    "name": "core-theme",
-    "displayName": "Core Theme",
-    "description": "Minimal environment aesthetics for maximum focus.",
-    "keywords": [
-        "vscode",
-        "theme",
-        "minimal",
-        "focus"
+  "name": "core-theme",
+  "displayName": "Core Theme",
+  "description": "Minimal environment aesthetics for maximum focus.",
+  "version": "0.6.0",
+  "author": "Michael Huynh",
+  "publisher": "miqh",
+  "license": "MIT",
+  "homepage": "https://marketplace.visualstudio.com/items?itemName=miqh.core-theme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/miqh/vscode-core-theme.git"
+  },
+  "bugs": {
+    "url": "https://github.com/miqh/vscode-core-theme/issues"
+  },
+  "engines": {
+    "node": "22.x",
+    "vscode": "^1.107.0"
+  },
+  "categories": [
+    "Themes"
+  ],
+  "keywords": [
+    "configurable",
+    "focus",
+    "minimal"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "contributes": {
+    "commands": [
+      {
+        "command": "coreTheme.updateTemplate",
+        "title": "Update Template",
+        "category": "Core Theme",
+        "enablement": "coreTheme.devOnly"
+      }
     ],
-    "version": "0.5.0",
-    "author": "Michael Huynh",
-    "publisher": "miqh",
-    "license": "MIT",
-    "homepage": "https://marketplace.visualstudio.com/items?itemName=miqh.core-theme",
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/miqh/vscode-core-theme.git"
-    },
-    "bugs": {
-        "url": "https://github.com/miqh/vscode-core-theme/issues"
-    },
-    "engines": {
-        "vscode": "^1.12.0"
-    },
-    "categories": [
-        "Themes"
-    ],
-    "contributes": {
-        "commands": [
-            {
-                "command": "core-theme.create",
-                "title": "Create Template",
-                "category": "Core Theme"
+    "configuration": {
+      "title": "Core Theme",
+      "properties": {
+        "coreTheme.colorKeys": {
+          "type": "object",
+          "properties": {
+            "b1": {
+              "type": "string",
+              "pattern": "^#([0-9a-fA-F]{3,4}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$",
+              "patternErrorMessage": "Value must be a colour of the form #RGB, #RGBA, #RRGGBB or #RRGGBBAA."
             },
-            {
-                "command": "core-theme.edit",
-                "title": "Edit Template",
-                "category": "Core Theme"
+            "b2": {
+              "type": "string",
+              "pattern": "^#([0-9a-fA-F]{3,4}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$",
+              "patternErrorMessage": "Value must be a colour of the form #RGB, #RGBA, #RRGGBB or #RRGGBBAA."
             },
-            {
-                "command": "core-theme.generate",
-                "title": "Generate Themes",
-                "category": "Core Theme"
+            "b3": {
+              "type": "string",
+              "pattern": "^#([0-9a-fA-F]{3,4}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$",
+              "patternErrorMessage": "Value must be a colour of the form #RGB, #RGBA, #RRGGBB or #RRGGBBAA."
             },
-            {
-                "command": "core-theme.remove",
-                "title": "Remove Template",
-                "category": "Core Theme"
+            "f1": {
+              "type": "string",
+              "pattern": "^#([0-9a-fA-F]{3,4}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$",
+              "patternErrorMessage": "Value must be a colour of the form #RGB, #RGBA, #RRGGBB or #RRGGBBAA."
+            },
+            "f2": {
+              "type": "string",
+              "pattern": "^#([0-9a-fA-F]{3,4}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$",
+              "patternErrorMessage": "Value must be a colour of the form #RGB, #RGBA, #RRGGBB or #RRGGBBAA."
+            },
+            "f3": {
+              "type": "string",
+              "pattern": "^#([0-9a-fA-F]{3,4}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$",
+              "patternErrorMessage": "Value must be a colour of the form #RGB, #RGBA, #RRGGBB or #RRGGBBAA."
+            },
+            "f4": {
+              "type": "string",
+              "pattern": "^#([0-9a-fA-F]{3,4}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$",
+              "patternErrorMessage": "Value must be a colour of the form #RGB, #RGBA, #RRGGBB or #RRGGBBAA."
+            },
+            "t1": {
+              "type": "string",
+              "pattern": "^#([0-9a-fA-F]{3,4}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$",
+              "patternErrorMessage": "Value must be a colour of the form #RGB, #RGBA, #RRGGBB or #RRGGBBAA."
+            },
+            "t2": {
+              "type": "string",
+              "pattern": "^#([0-9a-fA-F]{3,4}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$",
+              "patternErrorMessage": "Value must be a colour of the form #RGB, #RGBA, #RRGGBB or #RRGGBBAA."
+            },
+            "t3": {
+              "type": "string",
+              "pattern": "^#([0-9a-fA-F]{3,4}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$",
+              "patternErrorMessage": "Value must be a colour of the form #RGB, #RGBA, #RRGGBB or #RRGGBBAA."
             }
-        ],
-        "themes": []
+          },
+          "additionalProperties": false,
+          "default": {
+            "b1": "#1f1f1f",
+            "b2": "#2a2a2a",
+            "b3": "#363636",
+            "f1": "#c0c0c0",
+            "f2": "#a0a0a0",
+            "f3": "#808080",
+            "f4": "#444444",
+            "t1": "#c0c0c01a",
+            "t2": "#c0c0c040",
+            "t3": "#c0c0c05f"
+          }
+        }
+      }
     },
-    "activationEvents": [
-        "*"
-    ],
-    "main": "./dist/extension",
-    "icon": "images/extension-icon.png",
-    "qna": false,
-    "scripts": {
-        "build": "./node_modules/.bin/tsc -p .",
-        "check": "./node_modules/.bin/tslint -p .",
-        "watch": "./node_modules/.bin/tsc -watch -p .",
-        "postinstall": "node ./node_modules/vscode/bin/install",
-        "vscode:prepublish": "npm run check && npm run build"
-    },
-    "devDependencies": {
-        "@types/node": "^10.14.6",
-        "tslint": "^5.16.0",
-        "typescript": "^3.4.5",
-        "vscode": "^1.1.33"
-    }
+    "themes": [
+      {
+        "id": "Core Theme",
+        "label": "Core",
+        "uiTheme": "vs-dark",
+        "path": "./dist/core-theme.json",
+        "_watch": true
+      }
+    ]
+  },
+  "main": "./dist/extension.desktop.cjs",
+  "browser": "./dist/extension.web.cjs",
+  "extensionKind": [
+    "ui",
+    "workspace"
+  ],
+  "icon": "",
+  "qna": false,
+  "scripts": {
+    "build": "node ./build.mjs",
+    "build:release": "node ./build.mjs --release",
+    "check": "tsc --noEmit",
+    "lint": "eslint",
+    "vscode:prepublish": "npm run check && npm run lint && npm run build:release"
+  },
+  "dependencies": {
+    "zod": "4.2.1"
+  },
+  "devDependencies": {
+    "@eslint/js": "9.39.2",
+    "@types/node": "22.x",
+    "@types/vscode": "^1.107.0",
+    "esbuild": "0.27.2",
+    "eslint": "9.39.2",
+    "eslint-config-prettier": "10.1.8",
+    "eslint-plugin-prettier": "5.5.4",
+    "prettier": "3.7.4",
+    "typescript": "5.9.3",
+    "typescript-eslint": "8.50.0"
+  }
 }

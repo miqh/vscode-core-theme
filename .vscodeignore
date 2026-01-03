@@ -1,6 +1,10 @@
-.gitignore
-tsconfig.json
-tslint.json
-.vscode/**
-src/**
-themes/**
+**/*
+!dist/extension.desktop.cjs
+!dist/extension.web.cjs
+!dist/core-theme.json
+!dist/template.json
+!images/
+!LICENSE
+!CHANGELOG.md
+!README.md
+!package.json

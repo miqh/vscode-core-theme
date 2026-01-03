@@ -1,18 +1,35 @@
 {
-    "version": "0.2.0",
-    "configurations": [
-        {
-            "type": "extensionHost",
-            "request": "launch",
-            "name": "Launch Extension",
-            "runtimeExecutable": "${execPath}",
-            "args": [
-                "--extensionDevelopmentPath=${workspaceFolder}"
-            ],
-            "outFiles": [
-                "${workspaceFolder}/dist/**/*.js"
-            ],
-            "preLaunchTask": "launch",
-        }
-    ]
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Run Extension (Desktop)",
+      "type": "extensionHost",
+      "request": "launch",
+      "args": [
+        "--extensionDevelopmentPath=${workspaceFolder}",
+        "--disable-extensions",
+        "--profile-temp"
+      ],
+      "outFiles": [
+        "${workspaceFolder}/dist/extension.desktop.cjs",
+      ],
+      "preLaunchTask": "build"
+    },
+    {
+      "name": "Run Extension (Web)",
+      "type": "extensionHost",
+      "request": "launch",
+      "debugWebWorkerHost": true,
+      "args": [
+        "--extensionDevelopmentPath=${workspaceFolder}",
+        "--extensionDevelopmentKind=web",
+        "--disable-extensions",
+        "--profile-temp"
+      ],
+      "outFiles": [
+        "${workspaceFolder}/dist/extension.web.cjs",
+      ],
+      "preLaunchTask": "build",
+    }
+  ]
 }

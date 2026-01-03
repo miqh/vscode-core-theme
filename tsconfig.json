@@ -1,14 +1,21 @@
 {
   "compilerOptions": {
-    "esModuleInterop": true,
-    "module": "commonjs",
+    "outDir": "dist",
+    "module": "nodenext",
+    "checkJs": true,
+    "exactOptionalPropertyTypes": true,
+    "noImplicitOverride": true,
     "noImplicitReturns": true,
-    "outDir": "./dist",
-    "resolveJsonModule": true,
-    "strict": true,
-    "target": "es6"
+    "noPropertyAccessFromIndexSignature": true,
+    "noUncheckedIndexedAccess": true,
+    "noUncheckedSideEffectImports": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "skipLibCheck": true,
+    "strict": true
   },
   "include": [
-    "./src/**/*"
+    "*.mjs",
+    "src/**/*.ts"
   ]
 }
