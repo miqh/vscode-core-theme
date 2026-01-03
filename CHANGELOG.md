@@ -1,8 +1,16 @@
-# Change Log
+# Changelog
 
 All notable changes to this project will be documented in this file.
 
-This project adheres to [Semantic Versioning][].
+## 0.6.0 - 2026-01-03
+
+This is a completely experimental rewrite of the extension, primarily motivated
+by a long list of overdue issues built-up from personal use. It is published as
+a pre-release version for field testing.
+
+- Add automatic colour theme regeneration whenever colour keys are modified
+  via extension settings.
+- Add support for a limited version of the theme to be used as a web extension.
 
 ## [0.5.0][] - 2019-11-17
 
@@ -40,9 +48,7 @@ This project adheres to [Semantic Versioning][].
 
 First extension release.
 
-[Semantic Versioning]: http://semver.org/
-
 [0.5.0]: https://github.com/miqh/vscode-core-theme/compare/0.4.1...0.5.0
-[0.4.0]: https://github.com/miqh/vscode-core-theme/compare/0.3.0...0.4.1
+[0.4.1]: https://github.com/miqh/vscode-core-theme/compare/0.3.0...0.4.1
 [0.3.0]: https://github.com/miqh/vscode-core-theme/compare/0.2.0...0.3.0
 [0.2.0]: https://github.com/miqh/vscode-core-theme/compare/0.1.0...0.2.0
