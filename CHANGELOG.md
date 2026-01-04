@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-## [0.6.1][] - 2026-01-04
+## [0.6.2][] - 2026-01-04
 
 - Fix web extension distribution.
 - Add missed colour key assignments covering editor peek view and popups that
@@ -54,7 +54,7 @@ a pre-release version for field testing.
 
 First extension release.
 
-[0.6.1]: https://github.com/miqh/vscode-core-theme/compare/0.6.0...0.6.1
+[0.6.2]: https://github.com/miqh/vscode-core-theme/compare/0.6.0...0.6.2
 [0.5.0]: https://github.com/miqh/vscode-core-theme/compare/0.4.1...0.5.0
 [0.4.1]: https://github.com/miqh/vscode-core-theme/compare/0.3.0...0.4.1
 [0.3.0]: https://github.com/miqh/vscode-core-theme/compare/0.2.0...0.3.0
