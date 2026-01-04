@@ -11,7 +11,7 @@
         "--profile-temp"
       ],
       "outFiles": [
-        "${workspaceFolder}/dist/extension.desktop.cjs",
+        "${workspaceFolder}/dist/extension.desktop.js",
       ],
       "preLaunchTask": "build"
     },
@@ -27,7 +27,7 @@
         "--profile-temp"
       ],
       "outFiles": [
-        "${workspaceFolder}/dist/extension.web.cjs",
+        "${workspaceFolder}/dist/extension.web.js",
       ],
       "preLaunchTask": "build",
     }

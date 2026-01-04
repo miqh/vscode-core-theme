@@ -1,6 +1,6 @@
 **/*
-!dist/extension.desktop.cjs
-!dist/extension.web.cjs
+!dist/extension.desktop.js
+!dist/extension.web.js
 !dist/core-theme.json
 !dist/template.json
 !images/

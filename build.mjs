@@ -44,9 +44,6 @@ const config = {
   format: "cjs",
   logLevel: "silent",
   outdir: "dist",
-  outExtension: {
-    ".js": ".cjs",
-  },
   platform: "node",
   plugins: [esbuildProblemMatcherOutput],
 };
@@ -78,7 +75,7 @@ try {
     );
 
     const scripts = await import(
-      pathToFileURL(path.resolve(import.meta.dirname, "dist", "scripts.cjs"))
+      pathToFileURL(path.resolve(import.meta.dirname, "dist", "scripts.js"))
         .href
     );
     await scripts.postbuild();

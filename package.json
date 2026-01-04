@@ -121,8 +121,8 @@
       }
     ]
   },
-  "main": "./dist/extension.desktop.cjs",
-  "browser": "./dist/extension.web.cjs",
+  "main": "./dist/extension.desktop.js",
+  "browser": "./dist/extension.web.js",
   "extensionKind": [
     "ui",
     "workspace"
