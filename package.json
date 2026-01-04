@@ -127,7 +127,7 @@
     "ui",
     "workspace"
   ],
-  "icon": "",
+  "icon": "./images/extension-icon.png",
   "qna": false,
   "scripts": {
     "build": "node ./build.mjs",
