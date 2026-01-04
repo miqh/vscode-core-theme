@@ -35,7 +35,7 @@
         "command": "coreTheme.updateTemplate",
         "title": "Update Template",
         "category": "Core Theme",
-        "enablement": "coreTheme.devOnly"
+        "enablement": "!isWeb && coreTheme.devOnly"
       }
     ],
     "configuration": {
